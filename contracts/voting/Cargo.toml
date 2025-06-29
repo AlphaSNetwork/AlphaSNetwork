@@ -1,0 +1,24 @@
+[package]
+name = "voting_contract"
+version = "0.1.0"
+authors = ["Alpha Team"]
+edition = "2021"
+
+[dependencies]
+ink = { version = "4.0.0", default-features = false }
+
+[lib]
+name = "voting_contract"
+path = "lib.rs"
+crate-type = [
+	# Used for normal contract Wasm blobs.
+	"cdylib",
+]
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+]
+ink-as-dependency = []
+

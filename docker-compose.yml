@@ -1,0 +1,264 @@
+version: '3.8'
+
+services:
+  # Alpha区块链验证者节点1
+  alpha-validator-1:
+    build: .
+    container_name: alpha-validator-1
+    environment:
+      - NODE_TYPE=validator
+      - NODE_NAME=Alpha-Validator-1
+      - RPC_PORT=9944
+      - WS_PORT=9945
+      - P2P_PORT=30333
+      - LOG_LEVEL=info
+      - RUST_LOG=info
+    ports:
+      - "9944:9944"
+      - "9945:9945"
+      - "30333:30333"
+    volumes:
+      - alpha-validator-1-data:/data
+      - alpha-logs:/logs
+    networks:
+      - alpha-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9944/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha区块链验证者节点2
+  alpha-validator-2:
+    build: .
+    container_name: alpha-validator-2
+    environment:
+      - NODE_TYPE=validator
+      - NODE_NAME=Alpha-Validator-2
+      - RPC_PORT=9944
+      - WS_PORT=9945
+      - P2P_PORT=30333
+      - LOG_LEVEL=info
+      - RUST_LOG=info
+      - BOOTNODES=/ip4/alpha-validator-1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+    ports:
+      - "9954:9944"
+      - "9955:9945"
+      - "30343:30333"
+    volumes:
+      - alpha-validator-2-data:/data
+      - alpha-logs:/logs
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9944/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha区块链验证者节点3
+  alpha-validator-3:
+    build: .
+    container_name: alpha-validator-3
+    environment:
+      - NODE_TYPE=validator
+      - NODE_NAME=Alpha-Validator-3
+      - RPC_PORT=9944
+      - WS_PORT=9945
+      - P2P_PORT=30333
+      - LOG_LEVEL=info
+      - RUST_LOG=info
+      - BOOTNODES=/ip4/alpha-validator-1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+    ports:
+      - "9964:9944"
+      - "9965:9945"
+      - "30353:30333"
+    volumes:
+      - alpha-validator-3-data:/data
+      - alpha-logs:/logs
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9944/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha区块链全节点1
+  alpha-full-1:
+    build: .
+    container_name: alpha-full-1
+    environment:
+      - NODE_TYPE=full
+      - NODE_NAME=Alpha-Full-1
+      - RPC_PORT=9944
+      - WS_PORT=9945
+      - P2P_PORT=30333
+      - LOG_LEVEL=info
+      - RUST_LOG=info
+      - BOOTNODES=/ip4/alpha-validator-1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+    ports:
+      - "9974:9944"
+      - "9975:9945"
+      - "30363:30333"
+    volumes:
+      - alpha-full-1-data:/data
+      - alpha-logs:/logs
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9944/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha区块链全节点2
+  alpha-full-2:
+    build: .
+    container_name: alpha-full-2
+    environment:
+      - NODE_TYPE=full
+      - NODE_NAME=Alpha-Full-2
+      - RPC_PORT=9944
+      - WS_PORT=9945
+      - P2P_PORT=30333
+      - LOG_LEVEL=info
+      - RUST_LOG=info
+      - BOOTNODES=/ip4/alpha-validator-1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+    ports:
+      - "9984:9944"
+      - "9985:9945"
+      - "30373:30333"
+    volumes:
+      - alpha-full-2-data:/data
+      - alpha-logs:/logs
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9944/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha社交API服务
+  alpha-social-api:
+    build: ./alpha-social-api
+    container_name: alpha-social-api
+    environment:
+      - FLASK_ENV=production
+      - ALPHA_RPC_URL=http://alpha-validator-1:9944
+      - ALPHA_WS_URL=ws://alpha-validator-1:9945
+    ports:
+      - "5000:5000"
+    volumes:
+      - alpha-api-data:/app/data
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+      - alpha-validator-2
+      - alpha-validator-3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Alpha前端应用
+  alpha-social-frontend:
+    build: ./alpha-social-frontend
+    container_name: alpha-social-frontend
+    environment:
+      - VITE_API_URL=http://localhost:5000
+      - VITE_RPC_URL=http://localhost:9944
+      - VITE_WS_URL=ws://localhost:9945
+    ports:
+      - "3000:3000"
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-social-api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 监控服务 - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: alpha-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - alpha-network
+    restart: unless-stopped
+
+  # 监控服务 - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: alpha-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=alpha123
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - alpha-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  # 区块浏览器
+  alpha-explorer:
+    image: polkadot-js/apps:latest
+    container_name: alpha-explorer
+    ports:
+      - "3002:80"
+    environment:
+      - WS_URL=ws://alpha-validator-1:9945
+    networks:
+      - alpha-network
+    depends_on:
+      - alpha-validator-1
+    restart: unless-stopped
+
+volumes:
+  alpha-validator-1-data:
+  alpha-validator-2-data:
+  alpha-validator-3-data:
+  alpha-full-1-data:
+  alpha-full-2-data:
+  alpha-api-data:
+  alpha-logs:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  alpha-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+

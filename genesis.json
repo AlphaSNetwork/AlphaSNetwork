@@ -1,0 +1,113 @@
+{
+  "name": "Alpha Network",
+  "id": "alpha-mainnet",
+  "chainType": "Live",
+  "bootNodes": [
+    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp",
+    "/ip4/127.0.0.1/tcp/30334/p2p/12D3KooWHdiAxVd8uMQR1hGWXccidmfCwLqcMpGwR6QcTP6QRMuD"
+  ],
+  "telemetryEndpoints": null,
+  "protocolId": "alpha",
+  "properties": {
+    "tokenDecimals": 12,
+    "tokenSymbol": "ALC",
+    "ss58Format": 42
+  },
+  "consensusEngine": "aura",
+  "genesis": {
+    "runtime": {
+      "system": {
+        "code": "0x"
+      },
+      "balances": {
+        "balances": [
+          [
+            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            1000000000000000000
+          ],
+          [
+            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            1000000000000000000
+          ],
+          [
+            "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+            1000000000000000000
+          ],
+          [
+            "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+            1000000000000000000
+          ],
+          [
+            "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw",
+            1000000000000000000
+          ]
+        ]
+      },
+      "aura": {
+        "authorities": [
+          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y"
+        ]
+      },
+      "grandpa": {
+        "authorities": [
+          [
+            "5FA9nQDVg267DEd8m1ZypXLBnvN7SFxYwV7ndqSYGiN9TTpu",
+            1
+          ],
+          [
+            "5GoNkf6WdbxCFnPdAnYYQyCjAKPJgLNxXwPjwTh6DGg6gN3E",
+            1
+          ],
+          [
+            "5ChwvbDdK19rVdd3dJBFVjz8adqBSjsHp2WEuGNBwFN8DCi5",
+            1
+          ]
+        ]
+      },
+      "sudo": {
+        "key": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+      },
+      "alphaCoin": {
+        "totalSupply": 1000000000000000000000,
+        "initialHolders": [
+          {
+            "account": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "balance": 100000000000000000000,
+            "role": "founder"
+          },
+          {
+            "account": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "balance": 50000000000000000000,
+            "role": "team"
+          },
+          {
+            "account": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+            "balance": 50000000000000000000,
+            "role": "team"
+          }
+        ],
+        "reservedForMining": 500000000000000000000,
+        "reservedForStaking": 200000000000000000000,
+        "reservedForEcosystem": 100000000000000000000
+      },
+      "alphaSocial": {
+        "initialModerators": [
+          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+        ],
+        "contentModerationEnabled": true,
+        "maxPostLength": 2048,
+        "maxUsernameLength": 32,
+        "registrationFee": 1000000000000,
+        "postingFee": 100000000000
+      }
+    }
+  },
+  "codeSubstitutes": {},
+  "forkBlocks": null,
+  "badBlocks": null,
+  "lightSyncState": null
+}
+

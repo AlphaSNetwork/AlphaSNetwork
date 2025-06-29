@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Social - 启动中</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .loading-container {
+            text-align: center;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .app-name {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 2rem 0 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #e0e7ff);
+            border-radius: 2px;
+            width: 0%;
+            animation: progress 3s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="logo">
+            <span class="logo-text">α</span>
+        </div>
+        
+        <h1 class="app-name">Alpha Social</h1>
+        <p class="app-description">去中心化社交网络</p>
+        
+        <div class="loading-spinner"></div>
+        <p class="loading-text">正在启动应用...</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <p class="status-text" id="status">初始化区块链网络...</p>
+    </div>
+
+    <script>
+        const statusMessages = [
+            '初始化区块链网络...',
+            '连接Alpha节点...',
+            '同步区块数据...',
+            '加载用户界面...',
+            '准备就绪...'
+        ];
+
+        let currentIndex = 0;
+        const statusElement = document.getElementById('status');
+
+        function updateStatus() {
+            statusElement.textContent = statusMessages[currentIndex];
+            currentIndex = (currentIndex + 1) % statusMessages.length;
+        }
+
+        // 每2秒更新一次状态
+        setInterval(updateStatus, 2000);
+
+        // 检查应用是否已准备就绪
+        function checkAppReady() {
+            fetch('http://localhost:5173')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = 'http://localhost:5173';
+                    }
+                })
+                .catch(() => {
+                    // 继续等待
+                    setTimeout(checkAppReady, 1000);
+                });
+        }
+
+        // 开始检查
+        setTimeout(checkAppReady, 3000);
+    </script>
+</body>
+</html>
+
